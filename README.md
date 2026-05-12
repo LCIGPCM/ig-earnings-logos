@@ -1,2 +1,4 @@
-# ig-earnings-logos
-UK, EU and US Company Logos
+ig-earnings-logos/
+  .github/
+  README.md
+  companies.py
