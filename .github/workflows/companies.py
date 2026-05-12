@@ -963,7 +963,7 @@ for i, (ticker, domain) in enumerate(companies.items(), 1):
     if os.path.exists(path):
         print(f"[{i}/{total}] SKIP {ticker}")
         continue
-    url = f"https://logo.clearbit.com/{domain}?size=128"
+    url = f"https://t1.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=https://{domain}&size=128"
     try:
         urllib.request.urlretrieve(url, path)
         size = os.path.getsize(path)
