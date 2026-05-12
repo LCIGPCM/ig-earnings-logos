@@ -1,4 +1,4 @@
-ig-earnings-logos/
-  .github/
-  README.md
-  companies.py
+.github/workflows/
+  run.yml
+companies.py
+README.md
