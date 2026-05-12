@@ -1,20 +1,15 @@
 name: Download Logos
-
 on:
   workflow_dispatch:
-
 permissions:
   contents: write
-
 jobs:
   download:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: Run downloader
-        run: python3 companies.py
-
+        run: python3 .github/workflows/companies.py
       - name: Commit
         run: |
           git config user.name "github-actions"
