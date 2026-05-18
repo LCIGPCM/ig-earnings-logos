@@ -1,19 +1,11 @@
 """
-IG Earnings Calendar — Logo Downloader (3102 companies + dynamic fallback)
-
-Downloads logos using bare ticker names matching the calendar widget.
-The calendar looks up: cdn.jsdelivr.net/.../logos/{TICKER}.png
-
+IG Earnings Calendar — Logo Downloader (3262 companies)
 RUN:
-    python3 companies.py                    # download all 3102 entries
-    python3 companies.py TSLA NVDA HD       # specific tickers
-    python3 companies.py --discover XYZ     # auto-find ANY unknown ticker
+    python3 companies.py                    # download all logos
+    python3 companies.py TSLA NVDA HD       # download specific tickers only
 """
 
-import os
-import urllib.request
-import time
-import sys
+import os, urllib.request, time, sys
 
 
 companies = {
@@ -982,6 +974,7 @@ companies = {
     "DAWN": "dawntx.com",
     "DB1": "deutsche-boerse.com",
     "DBAN": "deutschebank.de",
+    "DBI": "designerbrands.com",
     "DBK": "db.com",
     "DBRG": "digitalbridge.com",
     "DBX": "dropbox.com",
@@ -989,6 +982,7 @@ companies = {
     "DCFC": "tritium.com",
     "DCI": "donaldson.com",
     "DCOM": "dime.com",
+    "DCP": "dcpmidstream.com",
     "DD": "dupont.com",
     "DDOG": "datadoghq.com",
     "DE": "deere.com",
@@ -998,13 +992,17 @@ companies = {
     "DELL": "dell.com",
     "DEMANT": "demant.com",
     "DENJY": "denso.com",
+    "DENN": "dennys.com",
     "DEZ": "deutz.com",
     "DFDS": "dfds.com",
+    "DFH": "dreamfindershomes.com",
+    "DFIN": "dfinsolutions.com",
     "DFS": "dfscorp.co.uk",
     "DG": "vinci.com",
     "DGE": "diageo.com",
     "DGE_UK": "diageo.com",
     "DGII": "digi.com",
+    "DGX": "questdiagnostics.com",
     "DHER": "deliveryhero.com",
     "DHI": "drhorton.com",
     "DHL": "dhl.com",
@@ -1018,8 +1016,10 @@ companies = {
     "DKSH": "dksh.com",
     "DL": "china-distance.com",
     "DLAR": "delarue.com",
+    "DLB": "dolby.com",
     "DLG": "directlinegroup.co.uk",
     "DLR": "digitalrealty.com",
+    "DLTH": "duluthtrading.com",
     "DLTR": "dollartree.com",
     "DMLP": "dorchesterminerals.com",
     "DMTK": "dermtech.com",
@@ -1030,12 +1030,14 @@ companies = {
     "DNMR": "danimer.com",
     "DNN": "denison.com",
     "DNO": "dno.no",
+    "DNOW": "distributionnow.com",
     "DNP": "dino.pl",
     "DNUT": "krispykreme.com",
     "DO": "diamondoffshore.com",
     "DOC": "physicians-realty.com",
     "DOCN": "digitalocean.com",
     "DOCS": "drmartens.com",
+    "DOCS_US": "doximity.com",
     "DOCU": "docusign.com",
     "DOKA": "dormakaba.com",
     "DOL": "dollarama.com",
@@ -1054,6 +1056,7 @@ companies = {
     "DRD": "drdgold.com",
     "DRI": "darden.com",
     "DRNA": "dicerna.com",
+    "DRVN": "drivenbrands.com",
     "DSCV": "discoverie.com",
     "DSGX": "descartes.com",
     "DSP": "viant.com",
@@ -1072,7 +1075,9 @@ companies = {
     "DUK": "duke-energy.com",
     "DUNI": "duni.com",
     "DUOL": "duolingo.com",
+    "DV": "doubleverify.com",
     "DVN": "devonenergy.com",
+    "DXC": "dxc.com",
     "DXCM": "dexcom.com",
     "DXP": "dxpe.com",
     "DY": "dycomind.com",
@@ -1089,6 +1094,7 @@ companies = {
     "EDR": "endeavor.com",
     "EDU": "neworiental.org",
     "EDV": "endeavourmining.com",
+    "EEFT": "euronet.com",
     "EFG": "efginternational.com",
     "EGBN": "eaglebancorp.com",
     "EGHT": "8x8.com",
@@ -1096,11 +1102,13 @@ companies = {
     "EGO": "eldoradogold.com",
     "EGP": "eastgroup.com",
     "EHC": "encompasshealth.com",
+    "EIG": "employers.com",
     "EIX": "edison.com",
     "EKF": "ekf.co.uk",
     "EKTA": "elekta.com",
     "EL": "esteelauder.com",
     "ELE": "endesa.com",
+    "ELF": "elfcosmetics.com",
     "ELISA": "elisa.com",
     "ELM": "elementis.com",
     "ELMRA": "elmera.no",
@@ -1122,17 +1130,23 @@ companies = {
     "ENG": "enagas.es",
     "ENGI": "engie.com",
     "ENI": "eni.com",
+    "ENLC": "enlink.com",
     "ENOV": "enovis.com",
     "ENPH": "enphase.com",
+    "ENR": "energizer.com",
+    "ENS": "enersys.com",
+    "ENSG": "ensign.com",
     "ENT": "entaingroup.com",
     "ENTA": "enanta.com",
     "ENTG": "entegris.com",
     "ENTRA": "entra.no",
+    "ENVA": "enova.com",
     "ENVX": "enovix.com",
     "ENX": "euronext.com",
     "EOAN": "eon.com",
     "EOG": "eogresources.com",
     "EPAM": "epam.com",
+    "EPC": "energizer.com",
     "EPD": "enterpriseproducts.com",
     "EPIC": "epicprivateequity.com",
     "EPRO": "epiroc.com",
@@ -1153,6 +1167,7 @@ companies = {
     "ESAB": "esab.com",
     "ESGR": "ensstar.com",
     "ESNT": "essentra.com",
+    "ESNT_US": "essent.com",
     "ESS": "essexapartmenthomes.com",
     "ESSA": "essabancorp.com",
     "ESSITY": "essity.com",
@@ -1170,6 +1185,7 @@ companies = {
     "EVBG": "everbridge.com",
     "EVD": "eventim.de",
     "EVGO": "evgo.com",
+    "EVH": "evolenthealth.com",
     "EVK": "evonik.com",
     "EVLO": "evlogenius.com",
     "EVO": "evolution.com",
@@ -1186,8 +1202,10 @@ companies = {
     "EXPE": "expediagroup.com",
     "EXPI": "exprealty.com",
     "EXPN": "experianplc.com",
+    "EXPO": "exponent.com",
     "EXPR": "express.com",
     "EXR": "extraspace.com",
+    "EXTR": "extremenetworks.com",
     "EZJ": "easyjet.com",
     "F": "ford.com",
     "FAB": "bankfab.com",
@@ -1199,12 +1217,14 @@ companies = {
     "FARO": "faro.com",
     "FAST": "fastenal.com",
     "FBD": "fbd.ie",
+    "FBHS": "fortune.com",
     "FBIO": "fortressbio.com",
     "FBIZ": "firstbusinessfinancial.com",
     "FBP": "firstbancorp.com",
     "FCC": "fcc.es",
     "FCEL": "fuelcellenergy.com",
     "FCF": "firstcommonwealth.com",
+    "FCFS": "firstcash.com",
     "FCIT": "foreignandcolonial.com",
     "FCN": "fti.com",
     "FCNCA": "firstcitizens.com",
@@ -1231,6 +1251,7 @@ companies = {
     "FGP": "firstgroupplc.com",
     "FGR": "eiffage.com",
     "FGT": "fidelity.com",
+    "FHB": "fhb.com",
     "FHI": "federated.com",
     "FHN": "firsthorizon.com",
     "FI": "fiserv.com",
@@ -1247,9 +1268,11 @@ companies = {
     "FL": "footlocker.com",
     "FLEX": "flex.com",
     "FLNC": "fluenceenergy.com",
+    "FLO": "flowersfood.com",
     "FLOW": "flowtraders.com",
     "FLR": "fluor.com",
     "FLS": "flsmidth.com",
+    "FLS_US": "flowserve.com",
     "FLT": "fleetcor.com",
     "FLYW": "flywire.com",
     "FM": "firstquantum.com",
@@ -1257,9 +1280,11 @@ companies = {
     "FME": "freseniusmedicalcare.com",
     "FMG": "fmgl.com.au",
     "FMX": "femsa.com",
+    "FN": "fabrinet.com",
     "FNB": "fnb-online.com",
     "FND": "flooranddecor.com",
     "FNF": "fnf.com",
+    "FNHC": "fednational.com",
     "FNTL": "wearefintel.com",
     "FNTN": "freenet.de",
     "FNV": "franco-nevada.com",
@@ -1285,12 +1310,16 @@ companies = {
     "FROG": "jfrog.com",
     "FROY": "leroyseafood.com",
     "FRPT": "freshpet.com",
+    "FRSH": "freshworks.com",
     "FRT": "federalrealty.com",
     "FSG": "foresightgroup.eu",
+    "FSK": "fsinvestments.com",
     "FSLR": "firstsolar.com",
     "FSLY": "fastly.com",
     "FSR": "firstrand.co.za",
     "FSTA": "fullersmithturner.co.uk",
+    "FSV": "firstservice.com",
+    "FTAI": "ftai.com",
     "FTDR": "frontdoor.com",
     "FTNT": "fortinet.com",
     "FTS": "fortisinc.com",
@@ -1306,6 +1335,7 @@ companies = {
     "FWRD": "forwardair.com",
     "FXP": "foxtons.co.uk",
     "FXPO": "ferrexpo.com",
+    "FYBR": "frontier.com",
     "G": "generali.com",
     "G1A": "gea.com",
     "G24": "scout24.com",
@@ -1328,6 +1358,7 @@ companies = {
     "GCP": "gcpinfrastructure.com",
     "GD": "gd.com",
     "GDEN": "goldenent.com",
+    "GDOT": "greendot.com",
     "GDRX": "goodrx.com",
     "GDS": "gds-services.com",
     "GDYN": "grid-dynamics.com",
@@ -1396,9 +1427,11 @@ companies = {
     "GPK": "graphicpkg.com",
     "GPN": "globalpayments.com",
     "GPOR": "gulfportres.com",
+    "GPRE": "gpreinc.com",
     "GPS": "gap.com",
     "GPW": "gpw.pl",
     "GRAB": "grab.com",
+    "GRBK": "greenbrrickpartners.com",
     "GREE": "greenidge.com",
     "GRES": "graspgroup.com",
     "GRF": "grifols.com",
@@ -1407,6 +1440,7 @@ companies = {
     "GRG_UK": "greggs.co.uk",
     "GRI": "grainger.co.uk",
     "GRMN": "garmin.com",
+    "GRND": "grindr.com",
     "GROW": "moltenventures.com",
     "GRP": "greencoat.com",
     "GRPN": "groupon.com",
@@ -1419,6 +1453,7 @@ companies = {
     "GTBIF": "greenthumb.com",
     "GTHX": "g1therapeutics.com",
     "GTLB": "gitlab.com",
+    "GTLS": "chartindustries.com",
     "GTY": "getty.com",
     "GVA": "graniteconstruction.com",
     "GVS": "gvs.com",
@@ -1431,6 +1466,7 @@ companies = {
     "H": "hyatt.com",
     "HAE": "haemonetics.com",
     "HAG": "hensoldt.net",
+    "HAIN": "hain.com",
     "HAL": "halliburton.com",
     "HALO": "halozyme.com",
     "HAR": "harmony.co.za",
@@ -1472,6 +1508,7 @@ companies = {
     "HGV": "hiltongrandvacations.com",
     "HHFA": "hamburgerhafen.com",
     "HI": "hillenbrand.com",
+    "HIBB": "hibbett.com",
     "HICL": "hicl.com",
     "HIG": "thehartford.com",
     "HIK": "hikma.com",
@@ -1481,14 +1518,17 @@ companies = {
     "HLAG": "hapaglloyd.com",
     "HLE": "hella.com",
     "HLE_DE": "hella.com",
+    "HLF": "herbalife.com",
     "HLI": "houlihan.com",
     "HLMA": "halma.com",
     "HLMN": "hillman.com",
     "HLNE": "hamiltonlane.com",
     "HLT": "hilton.com",
+    "HLX": "helixesg.com",
     "HL_US": "hecla-mining.com",
     "HMB": "hm.com",
     "HMC": "honda.com",
+    "HMN": "horacemann.com",
     "HMSB": "hamborner.com",
     "HMSO": "hammerson.com",
     "HMST": "homestreet.com",
@@ -1509,12 +1549,15 @@ companies = {
     "HPE": "hpe.com",
     "HPOL": "husqvarna.com",
     "HPQ": "hp.com",
+    "HRB": "hrblock.com",
     "HRI": "jpmorgan.com",
     "HRL": "hormelfoodscorporation.com",
+    "HRTG": "heritage.com",
     "HRTX": "heron.com",
     "HSBA": "hsbc.com",
     "HSIC": "henryschein.com",
     "HST": "hosthotels.com",
+    "HSTM": "healthstream.com",
     "HSXL": "hiscoxgroup.com",
     "HSY": "thehersheycompany.com",
     "HTLD": "heartlandexpress.com",
@@ -1550,10 +1593,12 @@ companies = {
     "IBKR": "interactivebrokers.com",
     "IBM": "ibm.com",
     "IBN": "icicibank.com",
+    "IBOC": "intlbcs.com",
     "IBST": "ibstock.com",
     "IBTA": "ibotta.com",
     "ICE": "ice.com",
     "ICG": "icgam.com",
+    "ICHR": "ichor.com",
     "ICLR": "iconplc.com",
     "ICPT": "interceptpharma.com",
     "IDCC": "interdigital.com",
@@ -1576,6 +1621,7 @@ companies = {
     "IHRT": "iheartmedia.com",
     "III": "3i.com",
     "IIIN": "insteel.com",
+    "IIIV": "i3verticals.com",
     "IIPR": "innovativeindustrialproperties.com",
     "ILD": "iliad.fr",
     "IMA": "ima.it",
@@ -1614,8 +1660,10 @@ companies = {
     "INWT": "inwit.it",
     "IONQ": "ionq.com",
     "IONS": "ionispharma.com",
+    "IOSP": "innospec.com",
     "IOVA": "iovance.com",
     "IP": "interpumpgroup.it",
+    "IPAR": "interparfums.com",
     "IPG": "interpublic.com",
     "IPGP": "ipgphotonics.com",
     "IPN": "ipsen.com",
@@ -1634,6 +1682,7 @@ companies = {
     "IRMD": "irhythmtech.com",
     "IRON": "discmedicine.com",
     "IRTC": "irhythmtech.com",
+    "IRWD": "ironwood.com",
     "ISBC": "investorsbanking.com",
     "ISCTR": "isbank.com.tr",
     "ISEE": "ivericbio.com",
@@ -1652,6 +1701,7 @@ companies = {
     "ITW": "itw.com",
     "ITX": "inditex.com",
     "IVN": "ivanhoe.com",
+    "IVT": "investind.com",
     "IVZ": "invesco.com",
     "IWG": "iwgplc.com",
     "IXICO": "ixico.com",
@@ -1663,6 +1713,7 @@ companies = {
     "JBGS": "jbgsmith.com",
     "JBHT": "jbhunt.com",
     "JBL": "jabil.com",
+    "JBSS": "jbss.com",
     "JBT": "jbtcorp.com",
     "JCGI": "jpmorgan.com",
     "JCI": "johnsoncontrols.com",
@@ -1671,6 +1722,7 @@ companies = {
     "JDW": "jdwetherspoon.co.uk",
     "JEF": "jefferies.com",
     "JEGI": "jpmorgan.com",
+    "JELD": "jeld-wen.com",
     "JEN": "jenoptik.com",
     "JET2": "jet2.com",
     "JETG": "jet2.com",
@@ -1679,6 +1731,7 @@ companies = {
     "JJSF": "jmsmuckerco.com",
     "JKHY": "jackhenry.com",
     "JLEN": "jfrg.com",
+    "JLL": "jll.com",
     "JM": "jm.se",
     "JMAT": "matthey.com",
     "JMT": "jeronimomartins.com",
@@ -1704,9 +1757,11 @@ companies = {
     "KAZ": "kazminerals.com",
     "KB": "kbfg.com",
     "KBC": "kbc.com",
+    "KBH": "kbhome.com",
     "KBR": "kbr.com",
     "KC": "kingsoft.com",
     "KCO": "kloeckner.com",
+    "KD": "kyndryl.com",
     "KDDIY": "kddi.com",
     "KDNY": "chinook.com",
     "KDP": "keurigdrpepper.com",
@@ -1738,7 +1793,9 @@ companies = {
     "KMI": "kindermorgan.com",
     "KMPH": "kempharm.com",
     "KMPR": "kemper.com",
+    "KMT": "kennametal.com",
     "KMX": "carmax.com",
+    "KN": "knowles.com",
     "KNEBV": "kone.com",
     "KNIN": "kuehne-nagel.com",
     "KNOS": "kainos.com",
@@ -1756,8 +1813,10 @@ companies = {
     "KR": "thekrogerco.com",
     "KRC": "kilroyrealty.com",
     "KRN": "krones.com",
+    "KRUS": "kura.com",
     "KRX": "kingspan.com",
     "KRYS": "krystalbiotech.com",
+    "KSS": "kohls.com",
     "KTOS": "kratosdefense.com",
     "KTY": "kety.pl",
     "KVUE": "kenvue.com",
@@ -1799,6 +1858,7 @@ companies = {
     "LFLY": "leafly.com",
     "LFUS": "littelfuse.com",
     "LGEN": "legalandgeneralgroup.com",
+    "LGIH": "lgihomes.com",
     "LGND": "ligand.com",
     "LHA": "lufthansa.com",
     "LHCG": "lhcgroup.com",
@@ -1820,6 +1880,7 @@ companies = {
     "LL": "lumberliquidators.com",
     "LLOY": "lloydsbankinggroup.com",
     "LLY": "lilly.com",
+    "LMAT": "lemaitre.com",
     "LMND": "lemonade.com",
     "LMP": "londonmetric.com",
     "LMPL": "liontrust.co.uk",
@@ -1844,6 +1905,7 @@ companies = {
     "LPLA": "lpl.com",
     "LPP": "lppsa.com",
     "LPSN": "liveperson.com",
+    "LPX": "lpcorp.com",
     "LR": "legrand.com",
     "LRCX": "lamresearch.com",
     "LRN": "stride.com",
@@ -1853,6 +1915,7 @@ companies = {
     "LSI": "lifestorage.com",
     "LSL": "lslps.co.uk",
     "LSPD": "lightspeed.com",
+    "LSTR": "landstar.com",
     "LTC": "ltc.com",
     "LTG": "ltgplc.com",
     "LTHM": "livent.com",
@@ -1871,9 +1934,11 @@ companies = {
     "LYEL": "lyell.com",
     "LYFT": "lyft.com",
     "LYV": "livenationentertainment.com",
+    "LZRD": "lazard.com",
     "MA": "mastercard.com",
     "MAA": "maarealty.com",
     "MAB": "mbplc.com",
+    "MAC": "macerich.com",
     "MAERSK": "maersk.com",
     "MAG": "magsilver.com",
     "MAN": "manpowergroup.com",
@@ -1887,6 +1952,7 @@ companies = {
     "MARS_IT": "marr.it",
     "MARUY": "marubeni.com",
     "MASI": "masimo.com",
+    "MAT": "mattel.com",
     "MATW": "matw.com",
     "MATX": "matson.com",
     "MAXR": "maxar.com",
@@ -1895,9 +1961,11 @@ companies = {
     "MBG": "mercedes-benz.com",
     "MBIN": "merchantsfinancial.com",
     "MBK": "mbank.pl",
+    "MBUU": "malibuboats.com",
     "MBWM": "mercantilebank.com",
     "MC": "lvmh.com",
     "MCB": "mvbbank.com",
+    "MCBS": "metrocity.com",
     "MCD": "mcdonalds.com",
     "MCHP": "microchip.com",
     "MCO": "moodys.com",
@@ -1905,6 +1973,8 @@ companies = {
     "MCRO": "micro-focus.com",
     "MC_US": "moelis.com",
     "MDB": "mongodb.com",
+    "MDC": "mdcholdings.com",
+    "MDGL": "madrigal.com",
     "MDIA": "mediaco.com",
     "MDLZ": "mondelezinternational.com",
     "MDT": "medtronic.com",
@@ -1913,6 +1983,7 @@ companies = {
     "MEDI": "medistim.com",
     "MEDP": "medpace.com",
     "MEG": "megenergy.com",
+    "MEI": "methode.com",
     "MEL": "melia.com",
     "MELI": "mercadolibre.com",
     "MELS": "melexis.com",
@@ -1922,25 +1993,31 @@ companies = {
     "MFB": "mediaforeurope.com",
     "MFC": "manulife.com",
     "MGAM": "meggroup.com",
+    "MGEE": "mgeenergy.com",
     "MGM": "mgmresorts.com",
     "MGNI": "magnite.com",
     "MGNS": "morgansindall.com",
+    "MGPI": "mgpi.com",
     "MGRC": "mcgrath.com",
     "MGTX": "meiragtx.com",
     "MHK": "mohawk.com",
+    "MHO": "mihomes.com",
     "MIDD": "middleby.com",
     "MIL": "millennium.pl",
     "MIME": "mimecast.com",
     "MIN": "mineral-resources.com.au",
     "MIPS": "mips.com",
     "MIRI": "mirriad.com",
+    "MIRM": "mirum.com",
     "MITSY": "mitsubishicorp.com",
     "MKC": "mccormick.com",
+    "MKL": "markel.com",
     "MKS": "marksandspencer.com",
     "MKSI": "mksinstruments.com",
     "MKTX": "marketaxess.com",
     "ML": "michelin.com",
     "MLCO": "melco-resorts.com",
+    "MLHR": "millerknoll.com",
     "MLI": "muellerind.com",
     "MLM": "martinmarietta.com",
     "MLP": "mlp-se.de",
@@ -1955,6 +2032,7 @@ companies = {
     "MNKD": "mannkindcorp.com",
     "MNOV": "medicinova.com",
     "MNP": "martinproperty.com",
+    "MNRO": "monro.com",
     "MNSO": "miniso.com",
     "MNST": "monsterenergy.com",
     "MNTS": "momentus.space",
@@ -1975,6 +2053,7 @@ companies = {
     "MOWI": "mowi.com",
     "MPC": "marathonpetroleum.com",
     "MPL": "medibank.com.au",
+    "MPLN": "multiplan.com",
     "MPLX": "mplx.com",
     "MPW": "medpropertiestrust.com",
     "MPWR": "monolithicpower.com",
@@ -2007,6 +2086,7 @@ companies = {
     "MTDR": "matadorresources.com",
     "MTEL": "magyartelecom.hu",
     "MTFB": "metals.com",
+    "MTH": "meritage.com",
     "MTO": "mitie.com",
     "MTRN": "materion.com",
     "MTSI": "macom.com",
@@ -2017,6 +2097,7 @@ companies = {
     "MU": "micron.com",
     "MUFG": "mufg.jp",
     "MULTI": "multiconsult.com",
+    "MUSA": "murphyusa.com",
     "MUV2": "munichre.com",
     "MVST": "microvast.com",
     "MWA": "muellerwp.com",
@@ -2032,6 +2113,7 @@ companies = {
     "NABL": "n-able.com",
     "NAG": "nagarro.com",
     "NAT": "nordicamerican.com",
+    "NAVI": "navient.com",
     "NBHC": "nationalbankholdings.com",
     "NBIS": "nebius.com",
     "NBIX": "neurocrine.com",
@@ -2044,11 +2126,14 @@ companies = {
     "NDA": "nordea.com",
     "NDAQ": "nasdaq.com",
     "NDA_DE": "nordex-online.com",
+    "NDLS": "noodles.com",
     "NDSN": "nordson.com",
     "NE": "nobledrilling.com",
     "NEE": "nexteraenergy.com",
     "NEM": "nemetschek.com",
     "NEM_US": "newmont.com",
+    "NEOG": "neogen.com",
+    "NEP": "nexteraenergypartners.com",
     "NESN": "nestle.com",
     "NESTE": "neste.com",
     "NET": "cloudflare.com",
@@ -2060,6 +2145,7 @@ companies = {
     "NFLX": "netflix.com",
     "NG": "nationalgrid.com",
     "NGD": "newgold.com",
+    "NHC": "nhccare.com",
     "NHY": "hydro.com",
     "NI": "nisource.com",
     "NIBEB": "nibe.se",
@@ -2070,11 +2156,13 @@ companies = {
     "NLOK": "nortonlifelock.com",
     "NLY": "annaly.com",
     "NMAN": "nmangroup.com",
+    "NMIH": "nationalmi.com",
     "NMR": "nomura.com",
     "NN": "nn-group.com",
     "NNN": "nfreit.com",
     "NOC": "northropgrumman.com",
     "NOD": "nodaltd.com",
+    "NOG": "northernoil.com",
     "NOKIA": "nokia.com",
     "NOLA": "nolato.se",
     "NOS": "nos.pt",
@@ -2093,6 +2181,7 @@ companies = {
     "NSC": "nscorp.com",
     "NSIT": "insightentp.com",
     "NSKOG": "norske-skog.com",
+    "NSP": "insperity.com",
     "NTAP": "netapp.com",
     "NTDOY": "nintendo.com",
     "NTES": "netease.com",
@@ -2105,6 +2194,7 @@ companies = {
     "NU": "nu.com.br",
     "NUAN": "nuance.com",
     "NUE": "nucor.com",
+    "NUS": "nuskin.com",
     "NUVA": "nuvasive.com",
     "NUVB": "nuvation.bio",
     "NUVEI": "nuvei.com",
@@ -2114,9 +2204,11 @@ companies = {
     "NVG": "navigator.pt",
     "NVR": "nvrinc.com",
     "NVST": "envistaco.com",
+    "NVT": "nvent.com",
     "NWBD": "nationwide.co.uk",
     "NWBI": "northwestbanking.com",
     "NWG": "natwestgroup.com",
+    "NWN": "nw-natural.com",
     "NWPX": "northwest-pipe.com",
     "NWS": "newscorp.com",
     "NWSA": "newscorp.com",
@@ -2130,6 +2222,7 @@ companies = {
     "O": "realtyincome.com",
     "O2D": "telefonica.de",
     "OABI": "oabi.com",
+    "OC": "owenscorning.com",
     "OCDO": "ocadogroup.com",
     "OCDO_UK": "ocadogroup.com",
     "OCI": "oci.nl",
@@ -2139,9 +2232,11 @@ companies = {
     "OEM": "oem.se",
     "OFC": "corporateoffice.com",
     "OFG": "ofgbancorp.com",
+    "OGE": "oge.com",
     "OGN": "origin.com",
     "OGN_UK": "origin.com",
     "OGN_US": "organon.com",
+    "OGS": "ogs.com",
     "OHI": "omegahealthcare.com",
     "OKE": "oneok.com",
     "OKLO": "oklo.com",
@@ -2154,6 +2249,7 @@ companies = {
     "OMC": "omnicomgroup.com",
     "OMCL": "omnicell.com",
     "OMER": "omeros.com",
+    "OMF": "onemainfinancial.com",
     "OMV": "omv.com",
     "ON": "onsemi.com",
     "ONB": "oldnational.com",
@@ -2163,9 +2259,11 @@ companies = {
     "ONTO": "ontoinnovation.com",
     "ONTX": "ontex.com",
     "OPAP": "opap.gr",
+    "OPCH": "optioncare.com",
     "OPEN": "opendoor.com",
     "OPERA": "opera.com",
     "OPL": "orange.pl",
+    "OPRX": "optimizerx.com",
     "OR": "loreal.com",
     "ORA": "orange.com",
     "ORCL": "oracle.com",
@@ -2181,6 +2279,7 @@ companies = {
     "OR_US": "osiskogold.com",
     "OSB": "osbgroup.com",
     "OSBC": "oldsecondbank.com",
+    "OSCR": "oscar.com",
     "OSIS": "osi-systems.com",
     "OSK": "oshkosh.com",
     "OSPN": "onespan.com",
@@ -2252,6 +2351,7 @@ companies = {
     "PG": "pg.com",
     "PGEN": "precigen.com",
     "PGHN": "partnersgroup.com",
+    "PGNY": "progyny.com",
     "PGR": "progressive.com",
     "PH": "parker.com",
     "PHI": "pacifichorizon.com",
@@ -2279,6 +2379,7 @@ companies = {
     "PLBY": "plbygroup.com",
     "PLD": "prologis.com",
     "PLMR": "palomar.com",
+    "PLNT": "planetfitness.com",
     "PLTK": "playtika.com",
     "PLTR": "palantir.com",
     "PLUG": "plugpower.com",
@@ -2291,11 +2392,13 @@ companies = {
     "PNC": "pnc.com",
     "PNDORA": "pandoragroup.com",
     "PNFP": "pinnaclfin.com",
+    "PNM": "pnm.com",
     "PNN": "pennon-group.co.uk",
     "PNTG": "pennantgroup.com",
     "PNW": "pinnaclewest.com",
     "PODD": "insulet.com",
     "POOL": "poolcorp.com",
+    "POR": "portlandgeneral.com",
     "POST": "postnl.nl",
     "POST_NL": "postnl.nl",
     "POW": "powercorp.com",
@@ -2308,6 +2411,7 @@ companies = {
     "PPH": "pphealthcare.com",
     "PPL": "pplweb.com",
     "PR": "permianresources.com",
+    "PRA": "proassurance.com",
     "PRAX": "praxis.com",
     "PRCH": "porch.com",
     "PRCT": "procept.com",
@@ -2315,6 +2419,7 @@ companies = {
     "PRGS": "progress.com",
     "PRIM": "primoris.com",
     "PRK": "park.com",
+    "PRM": "primerica.com",
     "PROT": "protector.no",
     "PROX": "proximus.com",
     "PRPL": "purple.com",
@@ -2355,14 +2460,18 @@ companies = {
     "QCOM": "qualcomm.com",
     "QCRH": "qcrholdings.com",
     "QDEL": "quidel.com",
+    "QFIN": "qfinance.com",
     "QLT": "quilter.com",
     "QLYS": "qualys.com",
     "QNB": "qnb.com",
+    "QNST": "quinstreet.com",
     "QQ": "qinetiq.com",
     "QRT": "questor.com",
+    "QRVO": "qorvo.com",
     "QS": "quantumscape.com",
     "QTWO": "q2holdings.com",
     "QUBT": "quantumcomputing.com",
+    "QUOT": "quotient.com",
     "RAA": "rational-online.com",
     "RACE": "ferrari.com",
     "RAMP": "liveramp.com",
@@ -2408,6 +2517,7 @@ companies = {
     "RF": "regions.com",
     "RGEN": "repligen.com",
     "RGLD": "royalgold.com",
+    "RGR": "ruger.com",
     "RGTI": "rigetti.com",
     "RHM": "rheinmetall.com",
     "RHM_UK": "rhm.com",
@@ -2440,6 +2550,7 @@ companies = {
     "ROG_US": "rogers.com",
     "ROK": "rockwellautomation.com",
     "ROKU": "roku.com",
+    "ROL": "rollins.com",
     "ROP": "ropertech.com",
     "ROST": "rossstores.com",
     "RPAY": "repay.com",
@@ -2471,6 +2582,7 @@ companies = {
     "RWA": "robertwalters.com",
     "RWE": "rwe.com",
     "RWS": "rws.com",
+    "RXO": "rxo.com",
     "RXRX": "recursion.com",
     "RY": "rbc.com",
     "RYA": "ryanair.com",
@@ -2516,12 +2628,14 @@ companies = {
     "SCCO": "southerncoppercorp.com",
     "SCHB": "schibsted.com",
     "SCHW": "aboutschwab.com",
+    "SCI": "sci-us.com",
     "SCL": "stepan.com",
     "SCMN": "swisscom.com",
     "SCMNY": "scatec.com",
     "SCPL": "sciplay.com",
     "SCR": "scor.com",
     "SCT": "softcat.com",
+    "SCVL": "schottenstein.com",
     "SCYR": "sacyr.com",
     "SDGR": "schrodinger.com",
     "SDI": "sdigroup.com",
@@ -2554,6 +2668,7 @@ companies = {
     "SG": "sweetgreen.com",
     "SGE": "sage.com",
     "SGMO": "sangamo.com",
+    "SGMS": "scientificgames.com",
     "SGO": "saint-gobain.com",
     "SGP_AU": "stockland.com.au",
     "SGRO": "segro.com",
@@ -2562,6 +2677,7 @@ companies = {
     "SHA": "schaeffler.com",
     "SHAK": "shakeshack.com",
     "SHB": "shaftesbury.co.uk",
+    "SHC": "sotera.com",
     "SHECY": "shin-etsu.co.jp",
     "SHED": "bigbox.co.uk",
     "SHEL": "shell.com",
@@ -2571,11 +2687,13 @@ companies = {
     "SHLS": "shoals.com",
     "SHO": "sunstonehotelreit.com",
     "SHOE": "shoezoneplc.com",
+    "SHOO": "stevemadden.com",
     "SHOP": "shopify.com",
     "SHOP_CA": "shopify.com",
     "SHW": "sherwin-williams.com",
     "SIE": "siemens.com",
     "SIFY": "sify.com",
+    "SIG": "signet.com",
     "SIGI": "selective.com",
     "SIGNIFY": "signify.com",
     "SIK": "sika.com",
@@ -2594,6 +2712,7 @@ companies = {
     "SKM": "sktelecom.com",
     "SKWD": "skyward.com",
     "SKX": "skechers.com",
+    "SKY": "skylinechampion.com",
     "SKYW": "skywest.com",
     "SLAB": "silabs.com",
     "SLB": "slb.com",
@@ -2601,6 +2720,7 @@ companies = {
     "SLG": "slgreen.com",
     "SLHN": "swisslife.com",
     "SLIGR": "sligro.nl",
+    "SLM": "salliemae.com",
     "SLT": "salzgitter-ag.com",
     "SLVM": "sylvamo.com",
     "SMAR": "smartsheet.com",
@@ -2641,6 +2761,7 @@ companies = {
     "SOLO": "electrameccanica.com",
     "SOLV": "solventum.com",
     "SON": "sonaecom.pt",
+    "SONO": "sonos.com",
     "SONY": "sony.com",
     "SOON": "sonova.com",
     "SOP": "soprasteria.com",
@@ -2650,11 +2771,13 @@ companies = {
     "SPCE": "virgingalactic.com",
     "SPG": "simon.com",
     "SPGI": "spglobal.com",
+    "SPHR": "sphere.com",
     "SPI": "spirehealthcare.com",
     "SPIE": "spie.com",
     "SPI_UK": "spirehealthcare.com",
     "SPL": "santander.pl",
     "SPNS": "sapiens.com",
+    "SPNT": "siriuspoint.com",
     "SPOT": "spotify.com",
     "SPR": "spiritaero.com",
     "SPSC": "spscommerce.com",
@@ -2737,6 +2860,7 @@ companies = {
     "SYK": "stryker.com",
     "SYNA": "synaptics.com",
     "SYNC": "syncona.com",
+    "SYNH": "syneos.com",
     "SYNT": "synthomer.com",
     "SYNT_UK": "synthomer.com",
     "SYSR": "systemair.com",
@@ -2751,6 +2875,7 @@ companies = {
     "TATE": "tateandlyle.com",
     "TBBK": "thecustomerbank.com",
     "TBCG": "tbcbank.com.ge",
+    "TBI": "trueblue.com",
     "TCBI": "texascapital.com",
     "TCBX": "texascommunity.com",
     "TCIT": "thecitigroup.com",
@@ -2759,6 +2884,7 @@ companies = {
     "TCOM": "trip.com",
     "TCRT": "alaunos.com",
     "TD": "td.com",
+    "TDC": "teradata.com",
     "TDG": "transdigm.com",
     "TDUP": "thredup.com",
     "TDY": "teledyne.com",
@@ -2780,6 +2906,7 @@ companies = {
     "TEX": "terex.com",
     "TFC": "truist.com",
     "TFX": "teleflex.com",
+    "TGNA": "tegna.com",
     "TGS": "tgs.com",
     "TGT": "target.com",
     "THG": "hanover.com",
@@ -2790,6 +2917,7 @@ companies = {
     "THYAO": "thy.com",
     "TIETO": "tietoevry.com",
     "TIGR": "itiger.com",
+    "TILE": "interface.com",
     "TIT": "telecomitalia.com",
     "TJX": "tjx.com",
     "TKA": "thyssenkrupp.com",
@@ -2803,6 +2931,7 @@ companies = {
     "TM": "toyota.com",
     "TMDX": "transmedics.com",
     "TME": "tencentmusic.com",
+    "TMHC": "taylormorrison.com",
     "TMO": "thermofisher.com",
     "TMP": "tompkins.com",
     "TMUS": "t-mobile.com",
@@ -2821,6 +2950,7 @@ companies = {
     "TPE": "tauronpe.pl",
     "TPFG": "theproperty.com",
     "TPG": "tpg.com",
+    "TPH": "tri-pointe.com",
     "TPK": "travisperkins.co.uk",
     "TPR": "tapestry.com",
     "TRAK": "trackwise.co.uk",
@@ -2832,6 +2962,7 @@ companies = {
     "TRIG": "therenewablesfund.com",
     "TRIP": "tripadvisor.com",
     "TRMB": "trimble.com",
+    "TRMD": "tormmedical.com",
     "TRMK": "trustmark.com",
     "TRN": "terna.it",
     "TRNO": "terreno.com",
@@ -2870,19 +3001,23 @@ companies = {
     "TWI": "titanmachinery.com",
     "TWKS": "thoughtworks.com",
     "TWLO": "twilio.com",
+    "TWNK": "hostess.com",
     "TWOU": "2u.com",
     "TWST": "twistbioscience.com",
+    "TXG": "10xgenomics.com",
     "TXN": "ti.com",
     "TXRH": "texasroadhouse.com",
     "TXT": "textron.com",
     "TYL": "tylertech.com",
     "U": "unity.com",
+    "UAA": "underarmour.com",
     "UAL": "ual.com",
     "UBER": "uber.com",
     "UBI": "ubisoft.com",
     "UBSG": "ubs.com",
     "UBSI": "unitedbanking.com",
     "UCB": "ucb.com",
+    "UCBI": "united.com",
     "UCG": "unicreditgroup.eu",
     "UDMY": "udemy.com",
     "UDR": "udr.com",
@@ -2900,6 +3035,7 @@ companies = {
     "UNH": "unitedhealthgroup.com",
     "UNI": "unipol.it",
     "UNIT": "uniti.com",
+    "UNM": "unum.com",
     "UNP": "unionpacific.com",
     "UPM": "upm.com",
     "UPS": "ups.com",
@@ -2908,14 +3044,17 @@ companies = {
     "URBN": "urbn.com",
     "URI": "unitedrentals.com",
     "URW": "urw.com",
+    "USAC": "usacompress.com",
     "USB": "usbank.com",
     "USF": "usforms.com",
     "USFD": "usfoods.com",
+    "USNA": "usana.com",
     "USPH": "usphysicaltherapy.com",
     "UTHR": "unither.com",
     "UTL": "unitil.com",
     "UU": "unitedutilities.com",
     "UUUU": "energyfuels.com",
+    "UVE": "universalinsurance.com",
     "UVSP": "univest.com",
     "V": "visa.com",
     "VAC": "marriottvacations.com",
@@ -2930,6 +3069,7 @@ companies = {
     "VCT": "victrex.com",
     "VCTR": "vcm.com",
     "VCYT": "veracyte.com",
+    "VECO": "veeco.com",
     "VEDL": "vedantalimited.com",
     "VEEV": "veeva.com",
     "VEI": "veidekke.com",
@@ -2983,12 +3123,14 @@ companies = {
     "VRTX": "vrtx.com",
     "VSCO": "victoriassecret.com",
     "VST": "vistracorp.com",
+    "VSTO": "vistaoutdoor.com",
     "VSVS": "vesuvius.com",
     "VTEX": "vtex.com",
     "VTR": "ventasreit.com",
     "VTY": "vistrygroup.co.uk",
     "VTYV": "vistrygroup.co.uk",
     "VWS": "vestas.com",
+    "VXRT": "vaxart.com",
     "VZ": "verizon.com",
     "W": "wayfair.com",
     "WAB": "wabteccorp.com",
@@ -3003,9 +3145,11 @@ companies = {
     "WBC": "westpac.com.au",
     "WBD": "wbd.com",
     "WBD_IT": "webuild.it",
+    "WBS": "websterbank.com",
     "WCC": "wesco.com",
     "WCH": "wacker.com",
     "WCP": "whitecap.com",
+    "WD": "walker-dunlop.com",
     "WDAY": "workday.com",
     "WDC": "westerndigital.com",
     "WDFC": "wdfc.com",
@@ -3021,10 +3165,12 @@ companies = {
     "WES_US": "westernmidstream.com",
     "WEX": "wexinc.com",
     "WFC": "wellsfargo.com",
+    "WFRD": "weatherford.com",
     "WG": "woodgroup.com",
     "WGO": "winnebago.com",
     "WGP": "westminstergroup.com",
     "WH": "wyndham.com",
+    "WHD": "cactuswell.com",
     "WHR": "warehouse-reit.co.uk",
     "WIE": "wienerberger.com",
     "WIHL": "wihlborgs.se",
@@ -3047,6 +3193,7 @@ companies = {
     "WMK": "weis.com",
     "WMS": "ams-osram.com",
     "WMT": "walmart.com",
+    "WNS": "wns.com",
     "WOLF": "wolfspeed.com",
     "WOR": "worthington.com",
     "WOSG": "watches-of-switzerland.com",
@@ -3072,6 +3219,7 @@ companies = {
     "WTFC": "wintrust.com",
     "WTS": "watts.com",
     "WTW": "wtwco.com",
+    "WU": "westernunion.com",
     "WULF": "terawulf.com",
     "WWW": "wolverine.com",
     "WYNN": "wynnresorts.com",
@@ -3081,6 +3229,7 @@ companies = {
     "XEL": "xcelenergy.com",
     "XENE": "xenon.com",
     "XM": "qualtrics.com",
+    "XNCR": "xencor.com",
     "XOM": "exxonmobil.com",
     "XP": "xpinc.com",
     "XPEL": "xpel.com",
@@ -3089,9 +3238,11 @@ companies = {
     "XPS": "xpsgroup.com",
     "XRAY": "dentsply.com",
     "XRO": "xero.com",
+    "XRX": "xerox.com",
     "XXL": "xxlasa.com",
     "XYL": "xylem.com",
     "YAR": "yara.com",
+    "YELL": "yellowcorp.com",
     "YELP": "yelp.com",
     "YEXT": "yext.com",
     "YMM": "ymm.com",
@@ -3099,6 +3250,7 @@ companies = {
     "YOU_US": "yougov.com",
     "YPF": "ypf.com",
     "YUM": "yum.com",
+    "YY": "joyy.com",
     "ZAL": "zalando.de",
     "ZBH": "zimmerbiomet.com",
     "ZBRA": "zebra.com",
@@ -3130,110 +3282,52 @@ SOURCES = [
     "https://www.google.com/s2/favicons?domain={domain}&sz=128",
 ]
 
-DOMAIN_GUESSES = [
-    "{tl}.com", "{tl}inc.com", "{tl}corp.com", "{tl}group.com",
-    "{tl}plc.com", "{tl}holdings.com", "{tl}.co.uk", "{tl}.de",
-    "{tl}.fr", "{tl}.se", "{tl}.no", "{tl}.nl", "{tl}.it",
-    "{tl}.es", "{tl}.ch", "{tl}.com.au", "{tl}.co.jp",
-]
-
-
-def fetch_image(url, min_bytes=500):
-    try:
-        req = urllib.request.Request(url, headers={
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
-        })
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            data = resp.read()
-            if len(data) >= min_bytes:
-                return data
-    except Exception:
-        pass
-    return None
-
 
 def download_logo(ticker, domain):
     path = os.path.join(LOGO_DIR, f"{ticker}.png")
     if os.path.exists(path) and os.path.getsize(path) > 500:
         return "exists"
     for tmpl in SOURCES:
-        data = fetch_image(tmpl.format(domain=domain))
-        if data:
-            with open(path, "wb") as f:
-                f.write(data)
-            return "ok"
-        time.sleep(0.1)
-    return "fail"
-
-
-def discover_logo(ticker):
-    path = os.path.join(LOGO_DIR, f"{ticker}.png")
-    if os.path.exists(path) and os.path.getsize(path) > 500:
-        return "exists"
-    tl = ticker.lower()
-    for pattern in DOMAIN_GUESSES:
-        domain = pattern.format(tl=tl)
-        for tmpl in SOURCES[:2]:
-            data = fetch_image(tmpl.format(domain=domain))
-            if data:
-                with open(path, "wb") as f:
-                    f.write(data)
-                return f"discovered:{domain}"
-            time.sleep(0.05)
+        try:
+            req = urllib.request.Request(
+                tmpl.format(domain=domain),
+                headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+            )
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                data = resp.read()
+                if len(data) >= 500:
+                    with open(path, "wb") as f:
+                        f.write(data)
+                    return "ok"
+        except Exception:
+            pass
+        time.sleep(0.05)
     return "fail"
 
 
 def main():
     os.makedirs(LOGO_DIR, exist_ok=True)
     args = sys.argv[1:]
-
-    if args and args[0] == "--discover":
-        for t in args[1:]:
-            t = t.upper()
-            if t in companies:
-                s = download_logo(t, companies[t])
-                print(f"  {t}: {s} (known: {companies[t]})")
-            else:
-                s = discover_logo(t)
-                print(f"  {t}: {s}")
-        return
-
-    if args:
-        targets = {}
-        for t in args:
-            t = t.upper()
-            if t in companies:
-                targets[t] = companies[t]
-            else:
-                print(f"  {t}: not in dict, trying discovery...")
-                s = discover_logo(t)
-                print(f"  {t}: {s}")
-    else:
-        targets = companies
-
+    targets = {t.upper(): companies[t.upper()] for t in args if t.upper() in companies} if args else companies
     total = len(targets)
     ok = exists = fail = 0
     failures = []
+
     for i, (ticker, domain) in enumerate(sorted(targets.items()), 1):
         s = download_logo(ticker, domain)
-        if s == "ok": ok += 1
-        elif s == "exists": exists += 1
-        else: fail += 1; failures.append(ticker)
+        if s == "ok":
+            ok += 1
+        elif s == "exists":
+            exists += 1
+        else:
+            fail += 1
+            failures.append(ticker)
         sym = {"ok": "+", "exists": ".", "fail": "X"}[s]
         print(f"[{i:4d}/{total}] {sym} {ticker:<12} {domain}")
 
     print(f"\nDone: {ok} new + {exists} existing = {ok+exists}/{total}")
     if failures:
-        print("Failed (" + str(len(failures)) + "): " + ", ".join(failures[:50]))
-        print("\nAuto-discovering failed tickers...")
-        recovered = 0
-        for t in failures:
-            s = discover_logo(t)
-            if s != "fail":
-                recovered += 1
-                print(f"  {t}: {s}")
-        if recovered:
-            print(f"Recovered {recovered}/{len(failures)} via discovery")
+        print("Failed (" + str(len(failures)) + "): " + ", ".join(failures))
 
 
 if __name__ == "__main__":
